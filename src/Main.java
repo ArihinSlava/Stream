@@ -16,7 +16,10 @@ public class Main {
         integerList.add(5);
         integerList.add(17);
         Stream<Integer> streamList = integerList.stream();
-        findMinMax(streamList,Comparator.comparingInt(i -> i), (min,max) -> System.out.println( "Минимальное - " + min + " Максимальное - " + max));
+
+        findMinMax(streamList, Integer::compareTo,
+                (x,y) -> System.out.println( "Минимальное - " + x + " Максимальное - " + y));
+
 
         ///Task2
         countEvenNumbers(integerList);
@@ -28,17 +31,13 @@ public class Main {
             Stream<? extends T> stream,
             Comparator<? super T> order,
             BiConsumer<? super T, ? super T> minMaxConsumer) {
-        List<T> arrayList;
-        T min = null;
-        T max = null;
-         arrayList = stream
+        List<T> arrayList = stream
                  .sorted(order)
                  .collect(Collectors.toList());
-        if (arrayList.size() != 0) {
-            min = arrayList.get(0);
-            max = arrayList.get(arrayList.size() - 1);
+        if (!arrayList.isEmpty()) {
+            minMaxConsumer.accept(arrayList.get(0), arrayList.get(arrayList.size() - 1));
         } else {
-            minMaxConsumer.accept(min, max);
+            minMaxConsumer.accept(null, null);
         }
     }
 
